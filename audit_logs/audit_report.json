@@ -1,0 +1,59 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-03-20T09:44:09.808790",
+    "version": "1.0",
+    "total_events": 5
+  },
+  "events": [
+    {
+      "event_type": "process_start",
+      "source_dir": "D:\\c++\\hup\\cunchuku\\ku\\source_data",
+      "output_dir": "D:\\c++\\hup\\cunchuku\\ku\\cleaned_data",
+      "rules_count": 9,
+      "timestamp": "2026-03-20T09:44:09.805245",
+      "sequence": 1,
+      "hash": "83573640debb47e96e51eefe33d868a97f0ad2797d5b6a8f63dac5cb3094859d"
+    },
+    {
+      "event_type": "files_scanned",
+      "total_files": 2,
+      "processed_files": 2,
+      "protected_files_skipped": 0,
+      "timestamp": "2026-03-20T09:44:09.806758",
+      "sequence": 2,
+      "hash": "2e40f485b2686b9400d73d6c542af17b3a4679dbfae65a2c8b169d5551e2ed7d"
+    },
+    {
+      "event_type": "file_processed",
+      "source_file": "D:\\c++\\hup\\cunchuku\\ku\\source_data\\sample_data.txt",
+      "output_file": "D:\\c++\\hup\\cunchuku\\ku\\cleaned_data\\sample_data.txt",
+      "original_size": 448,
+      "sanitized_size": 441,
+      "rules_applied": 9,
+      "timestamp": "2026-03-20T09:44:09.808284",
+      "sequence": 3,
+      "hash": "f5ac71395913eb9faf1196f84da533518e71f6a6d3a5eb307864acaec1782bd9"
+    },
+    {
+      "event_type": "file_processed",
+      "source_file": "D:\\c++\\hup\\cunchuku\\ku\\source_data\\system.log",
+      "output_file": "D:\\c++\\hup\\cunchuku\\ku\\cleaned_data\\system.log",
+      "original_size": 594,
+      "sanitized_size": 599,
+      "rules_applied": 9,
+      "timestamp": "2026-03-20T09:44:09.808790",
+      "sequence": 4,
+      "hash": "8d1b3dce3b1ef3492688d969baad5e4bb656bc6c52c890fbf0513c0963c217d5"
+    },
+    {
+      "event_type": "process_complete",
+      "processed_count": 2,
+      "skipped_count": 0,
+      "error_count": 0,
+      "timestamp": "2026-03-20T09:44:09.808790",
+      "sequence": 5,
+      "hash": "974005587af6517547aaf7875af30c37b57346f71def5a7c38f8ff144f57c7d4"
+    }
+  ],
+  "integrity": "e73ea149f0ee6605ffa6b3d403d7b3b1f76636f26def3767bf588ec4a7747ea3"
+}
