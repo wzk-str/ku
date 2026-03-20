@@ -1,57 +1,28 @@
-# 敏感数据脱敏与审计系统 - 配置文件
+sensitive_patterns:
+  - name: email
+    pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    replacement: '[EMAIL_REDACTED]'
+  
+  - name: phone_cn
+    pattern: '1[3-9]\d{9}'
+    replacement: '[PHONE_REDACTED]'
+  
+  - name: id_card_cn
+    pattern: '\d{17}[\dXx]'
+    replacement: '[ID_CARD_REDACTED]'
+  
+  - name: bank_card
+    pattern: '\d{16,19}'
+    replacement: '[BANK_CARD_REDACTED]'
+  
+  - name: ip_address
+    pattern: '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    replacement: '[IP_REDACTED]'
 
-# 脱敏规则列表
-sanitization_rules:
-  # 手机号脱敏：保留前3位和后4位
-  - pattern: '(1[3-9]\d)\d{4}(\d{4})'
-    replacement: '\1****\2'
-    description: '手机号脱敏'
-    case_insensitive: false
-  
-  # 身份证号脱敏：保留前6位和后4位
-  - pattern: '(\d{6})\d{8,11}(\d{4})'
-    replacement: '\1***********\2'
-    description: '身份证号脱敏'
-    case_insensitive: false
-  
-  # 邮箱脱敏：保留首字母和域名
-  - pattern: '([a-zA-Z0-9])[a-zA-Z0-9._-]*(@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})'
-    replacement: '\1****\2'
-    description: '邮箱脱敏'
-    case_insensitive: false
-  
-  # 银行卡号脱敏：保留前4位和后4位
-  - pattern: '(\d{4})\d{8,12}(\d{4})'
-    replacement: '\1 **** **** \2'
-    description: '银行卡号脱敏'
-    case_insensitive: false
-  
-  # IP地址脱敏：隐藏最后一段
-  - pattern: '(\d{1,3}\.\d{1,3}\.\d{1,3})\.\d{1,3}'
-    replacement: '\1.***'
-    description: 'IP地址脱敏'
-    case_insensitive: false
-  
-  # 密码字段脱敏（英文）：匹配 password=xxx 或 password: xxx 格式
-  - pattern: '(?i)(password[=:]\s*)\S+'
-    replacement: '\1[REDACTED]'
-    description: '密码字段脱敏（英文）'
-    case_insensitive: true
-  
-  # 密码字段脱敏（中文）：匹配 密码:xxx 或 密码=xxx 格式
-  - pattern: '(密码[=：:]\s*)\S+'
-    replacement: '\1[REDACTED]'
-    description: '密码字段脱敏（中文）'
-    case_insensitive: false
-  
-  # API密钥脱敏
-  - pattern: '(?i)(api[_-]?key[=:]\s*)\S+'
-    replacement: '\1[REDACTED]'
-    description: 'API密钥脱敏'
-    case_insensitive: true
-  
-  # 信用卡CVV脱敏
-  - pattern: '(?i)(cvv[=:]\s*)\d{3,4}'
-    replacement: '\1[REDACTED]'
-    description: 'CVV脱敏'
-    case_insensitive: true
+protected_files:
+  - '.gitkeep'
+  - 'README.md'
+
+allowed_extensions:
+  - '.txt'
+  - '.log'

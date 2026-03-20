@@ -1,81 +1,48 @@
-#!/usr/bin/env python3
-"""
-敏感数据脱敏与审计系统 - 主入口模块
-
-此文件是唯一入口，仅负责初始化配置和调用 orchestrator 模块。
-禁止在此文件中定义业务逻辑函数。
-"""
-
 import os
 import sys
-import yaml
-from pathlib import Path
 
+from orchestrator import run_pipeline
 
-def load_config(config_path: str) -> dict:
-    """加载 YAML 配置文件"""
-    with open(config_path, 'r', encoding='utf-8') as f:
-        return yaml.safe_load(f)
-
-
-def resolve_paths() -> dict:
-    """
-    统一解析所有路径，作为参数传递给下游函数。
-    所有路径解析在此完成，严禁在各子模块中硬编码路径字符串。
-    """
-    base_dir = Path(__file__).parent.resolve()
-    
-    paths = {
-        'source_dir': base_dir / 'source_data',
-        'output_dir': base_dir / 'cleaned_data',
-        'audit_dir': base_dir / 'audit_logs',
-        'config_file': base_dir / 'config.yaml',
-        'audit_report': base_dir / 'audit_logs' / 'audit_report.json'
-    }
-    
-    return paths
-
+SOURCE_PATH = os.path.join('.', 'source_data')
+OUTPUT_PATH = os.path.join('.', 'cleaned_data')
+AUDIT_DIR = os.path.join('.', 'audit_logs')
+CONFIG_PATH = os.path.join('.', 'config.yaml')
+AUDIT_REPORT_PATH = os.path.join(AUDIT_DIR, 'audit_report.json')
 
 def main():
-    """主函数 - 系统入口"""
-    # 解析所有路径
-    paths = resolve_paths()
+    print("=" * 50)
+    print("敏感数据脱敏与审计系统")
+    print("=" * 50)
     
-    # 检查配置文件是否存在
-    if not paths['config_file'].exists():
-        print(f"错误: 配置文件不存在: {paths['config_file']}")
+    print(f"\n[配置] 源数据目录: {SOURCE_PATH}")
+    print(f"[配置] 输出目录: {OUTPUT_PATH}")
+    print(f"[配置] 审计报告: {AUDIT_REPORT_PATH}")
+    
+    if not os.path.exists(CONFIG_PATH):
+        print(f"\n[错误] 配置文件不存在: {CONFIG_PATH}")
         sys.exit(1)
     
-    # 加载配置
-    try:
-        config = load_config(str(paths['config_file']))
-    except Exception as e:
-        print(f"错误: 加载配置文件失败: {e}")
-        sys.exit(1)
+    if not os.path.exists(SOURCE_PATH):
+        print(f"\n[警告] 源数据目录不存在，正在创建: {SOURCE_PATH}")
+        os.makedirs(SOURCE_PATH, exist_ok=True)
+        print("[提示] 请将需要脱敏的 .txt 或 .log 文件放入 source_data 目录后重新运行")
+        return
     
-    # 检查源目录是否存在
-    if not paths['source_dir'].exists():
-        print(f"错误: 源数据目录不存在: {paths['source_dir']}")
-        sys.exit(1)
+    print("\n[开始] 执行脱敏处理流水线...")
     
-    # 确保输出目录存在
-    paths['output_dir'].mkdir(parents=True, exist_ok=True)
-    paths['audit_dir'].mkdir(parents=True, exist_ok=True)
+    result = run_pipeline(
+        source_path=SOURCE_PATH,
+        output_path=OUTPUT_PATH,
+        audit_report_path=AUDIT_REPORT_PATH,
+        config_path=CONFIG_PATH
+    )
     
-    # 导入并调用 orchestrator 模块
-    try:
-        import orchestrator
-        orchestrator.run(
-            source_dir=str(paths['source_dir']),
-            output_dir=str(paths['output_dir']),
-            audit_report_path=str(paths['audit_report']),
-            config=config
-        )
-        print("脱敏处理完成。审计报告已生成。")
-    except Exception as e:
-        print(f"错误: 处理过程中发生异常: {e}")
-        sys.exit(1)
-
+    print("\n" + "=" * 50)
+    print("[完成] 处理结果:")
+    print(f"  - 成功处理文件数: {result['processed']}")
+    print(f"  - 处理错误数: {result['errors']}")
+    print(f"  - 审计报告路径: {result['report_path']}")
+    print("=" * 50)
 
 if __name__ == '__main__':
     main()
